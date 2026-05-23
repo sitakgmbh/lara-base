@@ -10,14 +10,18 @@ use Sitakgmbh\LaraBase\Auth\LdapProvisioningService;
 
 class ApiAuthSwitcher
 {
-    public function handle($request, Closure $next)
-    {
-        if (isset($_SERVER['REMOTE_USER'])) {
-            return $this->handleSso($request, $next);
-        }
+	public function handle($request, Closure $next)
+	{
+		if (isset($_SERVER['REMOTE_USER'])) {
+			return $this->handleSso($request, $next);
+		}
 
-        return $this->handleBasicAuth($request, $next);
-    }
+		if (Auth::check()) {
+			return $next($request);
+		}
+
+		return $this->handleBasicAuth($request, $next);
+	}
 
     private function handleSso($request, Closure $next)
     {
