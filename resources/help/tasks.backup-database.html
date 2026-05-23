@@ -1,0 +1,42 @@
+<h1>Datenbank sichern</h1>
+
+<p>
+    Dieser Task erstellt ein vollständiges SQL-Backup der Datenbank und bereinigt automatisch ältere Backup-Dateien.
+</p>
+
+<h2>Command</h2>
+
+<pre><code>php artisan db:backup</code></pre>
+
+<h2>Ablauf</h2>
+
+<ol>
+    <li><code>mysqldump</code> auf dem System suchen via <code>where</code> (Ermittlung Windows/Linux)</li>
+    <li>Dump der konfigurierten Datenbank erstellen</li>
+    <li>Backup-Datei unter <code>storage/app/backup/database/</code> speichern</li>
+    <li>Backup-Dateien älter als 14 Tage löschen</li>
+</ol>
+
+<h2>Backup-Datei</h2>
+
+<p>
+    Die Dateien werden nach folgendem Schema benannt:
+</p>
+
+<pre><code>storage/app/backup/database/{datenbankname}_{YYYYMMDD_HHmmss}.sql</code></pre>
+
+<h2>Bereinigung</h2>
+
+<p>
+    Nach dem erfolgreichen Backup werden Dateien im Verzeichnis <code>backup/database</code>
+    gelöscht, deren Änderungsdatum älter als 14 Tage ist.
+    Gelöschte Dateien werden im Log festgehalten.
+</p>
+
+<h2>Logging und Monitoring</h2>
+
+<ul>
+    <li>Bei erfolgreichem Backup wird Dateiname, Datenbankname, Dateigrösse und Dauer geloggt.</li>
+    <li>Gelöschte alte Backups werden separat mit Anzahl und Dateinamen geloggt.</li>
+    <li>Bei einem Fehler werden Fehlermeldung, Exit-Code und Dauer geloggt.</li>
+</ul>

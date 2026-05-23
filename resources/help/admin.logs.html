@@ -1,0 +1,139 @@
+<h1>Logs</h1>
+
+<p>
+    Die Log-Verwaltung dient zur Analyse, Nachvollziehbarkeit und Fehlerdiagnose
+    innerhalb des Systems. Sie kombiniert strukturierte Datenbank-Logs
+    mit klassischen Logdateien aus dem Dateisystem.
+</p>
+
+<h2>Logs (Datenbank)</h2>
+
+<p>
+    In der Log-Übersicht werden alle im System erfassten Logeinträge angezeigt, die strukturiert in der Datenbank gespeichert sind.
+</p>
+
+<h3>Angezeigte Informationen</h3>
+
+<ul>
+    <li>
+        <strong>Datum</strong> – Zeitpunkt, zu dem der Logeintrag erstellt wurde.
+    </li>
+    <li>
+        <strong>Level</strong> – Schweregrad des Ereignisses
+        (z. B. Fehler, Warnung, Information).
+    </li>
+    <li>
+        <strong>Kategorie</strong> – Fachlicher oder technischer Kontext
+        (z. B. System, AD, Graph, SAP).
+    </li>
+    <li>
+        <strong>Nachricht</strong> – Kurzbeschreibung des Ereignisses.
+    </li>
+    <li>
+        <strong>Kontext</strong> – Optionaler Kontext im JSON-Format.
+    </li>
+</ul>
+
+<h3>Log-Level</h3>
+
+<ul>
+    <li>
+        <strong>Error</strong> – Kritischer Fehler, der eine Aktion oder Analyse erfordert.
+    </li>
+    <li>
+        <strong>Warning</strong> – Auffälligkeit oder unerwarteter Zustand.
+    </li>
+    <li>
+        <strong>Info</strong> – Reine Informationsmeldung ohne Fehlercharakter.
+    </li>
+</ul>
+
+<h3>Filter und Suche</h3>
+
+<p>
+    Die Tabelle kann gezielt eingeschränkt werden:
+</p>
+
+<ul>
+    <li>
+        <strong>Level</strong> – Filter nach Schweregrad.
+    </li>
+    <li>
+        <strong>Kategorie</strong> – Filter nach fachlichem Kontext.
+    </li>
+    <li>
+        <strong>Datumsbereich</strong> – Eingrenzung nach Erstellungsdatum
+        (von/bis).
+    </li>
+    <li>
+        <strong>Suche</strong> – Volltextsuche innerhalb der Log-Nachrichten. Der Kontext wird nicht durchsucht.
+    </li>
+</ul>
+
+<p>
+    Änderungen an Filtern oder Suchbegriffen aktualisieren die Tabelle sofort.
+</p>
+
+<h3>Aktionen</h3>
+
+<ul>
+    <li>
+        <strong>Details</strong> (<i class="mdi mdi-eye"></i>) – Öffnet die Detailansicht eines Logeintrags inklusive Kontextdaten.
+    </li>
+    <li>
+        <strong>Export CSV</strong> – Exportiert den aktuell gefilterten Tabelleninhalt
+        als CSV-Datei.
+    </li>
+</ul>
+
+<h4>Log-Details</h4>
+
+<p>
+    In der Detailansicht eines Logeintrags werden zusätzliche Informationen angezeigt:
+</p>
+
+<ul>
+    <li>
+        Exaktes Log-Level und Kategorie
+    </li>
+    <li>
+        Vollstädige Log-Nachricht
+    </li>
+    <li>
+        Strukturierter Kontext (JSON), z. B. Parameter, IDs oder Systeminformationen
+    </li>
+</ul>
+
+<p>
+    Die Kontextdaten dienen der technischen Analyse und koennen je nach Log
+    sehr unterschiedlich aufgebaut sein.
+</p>
+
+<h2>Logfiles (Dateisystem)</h2>
+
+<p>
+    Neben den Datenbank-Logs können auch klassische Logdateien eingesehen werden, welche direkt aus dem Dateisystem stammen. Du erreichst die Seite von der Log-Hauptseite aus über einen Klick oben rechts auf <i class="mdi mdi-file-document-multiple"></i>.
+</p>
+
+<h3>Anzeige</h3>
+
+<ul>
+    <li>
+        Jede Logdatei wird mit Name, Grösse und letztem Änderungsdatum angezeigt.
+    </li>
+    <li>
+        Der Inhalt wird im Volltext dargestellt und automatisch bis ans Ende gescrollt.
+    </li>
+</ul>
+
+<h3>Aktionen bei Logfiles</h3>
+
+<ul>
+    <li>
+        <strong>Download</strong> – Lädt die Logdatei herunter.
+        Der Vorgang wird protokolliert.
+    </li>
+    <li>
+        <strong>Löschen</strong> – Entfernt die Logdatei nach Bestätigung. Der Vorgang wird protokolliert.
+    </li>
+</ul>

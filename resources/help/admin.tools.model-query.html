@@ -1,0 +1,69 @@
+<h1>Model Query</h1>
+<p>
+    Das Model Query Tool ermöglicht das gezielte Abfragen und Filtern von Datenbankeinträgen
+    aus verschiedenen Datenmodellen. Es richtet sich an Administratoren, die ohne direkten
+    Datenbankzugriff schnell Daten einsehen, prüfen oder exportieren möchten.
+</p>
+
+<h2>Model auswählen</h2>
+<p>
+    Im oberen Bereich kann aus einer Auswahlliste ein Datenmodell gewählt werden. Zur Verfügung
+    stehen ausschliesslich freigegebene Modelle.
+</p>
+
+<p>
+    Nach der Auswahl werden die verfügbaren Spalten des Modells automatisch geladen und
+    stehen für Filterung und Sortierung zur Verfügung.
+</p>
+
+<h2>Sortierung</h2>
+<p>
+    Über die Felder <strong>Sortierung</strong> und <strong>Richtung</strong> kann die Ergebnisliste
+    nach einer beliebigen Spalte auf- oder absteigend sortiert werden.
+</p>
+
+<h2>Filter</h2>
+<p>
+    Mit dem Button <strong>Filter</strong> können beliebig viele Filterbedingungen hinzugefügt werden.
+    Jeder Filter besteht aus drei Teilen:
+</p>
+<ul>
+    <li><strong>Spalte</strong> – die zu filternde Datenbankspalte</li>
+    <li><strong>Operator</strong> – die Art der Bedingung</li>
+    <li><strong>Wert</strong> – der Vergleichswert (entfällt bei IS NULL / IS NOT NULL)</li>
+</ul>
+<p>
+    Folgende Operatoren stehen zur Verfügung:
+</p>
+<ul>
+    <li><strong>=</strong> – exakte Übereinstimmung</li>
+    <li><strong>!=</strong> – ungleich</li>
+    <li><strong>LIKE</strong> – Teilstring-Suche (z. B. <code>muster</code> findet <code>mustermann</code>)</li>
+    <li><strong>&gt;</strong> / <strong>&lt;</strong> – grösser / kleiner als</li>
+    <li><strong>IS NULL</strong> – Feld ist leer</li>
+    <li><strong>IS NOT NULL</strong> – Feld ist nicht leer</li>
+</ul>
+<p>
+    Mehrere Filter werden als UND-Bedingung kombiniert. Einzelne Filter können jederzeit
+    mit dem roten <strong>X</strong>-Button entfernt werden. Mit <strong>Reset</strong> werden
+    alle Filter, Sortierungen und die Seitenposition zurückgesetzt.
+</p>
+
+<h2>Ergebnisse</h2>
+<p>
+    Die Treffer werden unterhalb der Filter in einer Tabelle dargestellt. Alle Spalten des
+    gewählten Modells werden angezeigt. Über das Auswahlfeld <strong>Einträge</strong> kann
+    die Anzahl der pro Seite angezeigten Datensätze angepasst werden (10, 25, 50, 100 oder alle).
+</p>
+
+<h2>Export</h2>
+<p>
+    Mit dem <strong>Download</strong>-Button wird die aktuelle Abfrage — inklusive aller aktiven
+    Filter und Sortierungen — als CSV-Datei exportiert. Der Export enthält alle Treffer,
+    unabhängig von der gewählten Seitenanzahl. Einige Felder wie z. B. <code>restore_context</code> oder <code>profile_photo_base64</code> werden aus dem Export ausgeschlossen,
+    da sie technische oder sehr grosse Inhalte enthalten:
+</p>
+
+<p>
+    Die Datei wird im CSV-Format mit Semikolon als Trennzeichen und UTF-8 exportiert.
+</p>
