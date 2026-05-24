@@ -10,6 +10,38 @@ class SettingsSeeder extends Seeder
     public function run(): void
     {
         $base = [
+			[
+				'key'         => 'app_update_url',
+				'name'        => 'Update URL',
+				'group'       => 'Update',
+				'description' => 'URL zum WinStage Update-Verzeichnis.',
+				'value'       => 'https://myserver.local/update,
+				'type'        => 'string',
+			],
+            [
+                'key'         => 'app_version',
+                'name'        => 'Installierte Version',
+                'group'       => 'Update',
+                'description' => 'Aktuell installierte Version der Anwendung.',
+                'value'       => '1.0.0',
+                'type'        => 'string',
+            ],
+			[
+				'key'         => 'app_version_latest',
+				'name'        => 'Neueste Version',
+				'group'       => 'Update',
+				'description' => 'Neueste verfügbare Version der Anwendung.',
+				'value'       => null,
+				'type'        => 'string',
+			],
+            [
+                'key'         => 'app_version_checked_at',
+                'name'        => 'Letzter Update-Check',
+                'group'       => 'Update',
+                'description' => 'Zeitpunkt des letzten Versions-Checks.',
+                'value'       => null,
+                'type'        => 'string',
+            ],
             [
                 'key'         => 'debug_mode',
                 'name'        => 'Debug-Modus',

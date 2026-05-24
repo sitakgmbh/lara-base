@@ -144,7 +144,7 @@ return [
 	'task_scheduler' => [
 		'allowed' => [
 			'db:backup',
-			'test:do-error'
+			'server:check-update'
 		],
 	],
 

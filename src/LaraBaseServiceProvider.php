@@ -104,8 +104,9 @@ class LaraBaseServiceProvider extends ServiceProvider
 		$loader->alias('LaraUserSettings', \Sitakgmbh\LaraBase\Facades\LaraUserSettings::class);
 
 		$this->commands([
-			\Sitakgmbh\LaraBase\Console\Server\BackupDatabase::class,
 			\Sitakgmbh\LaraBase\Console\InstallCommand::class,
+			\Sitakgmbh\LaraBase\Console\Server\BackupDatabase::class,
+			\Sitakgmbh\LaraBase\Console\Server\CheckUpdate::class,
 		]);
 
         Livewire::component('layout.topbar',  \Sitakgmbh\LaraBase\Livewire\Layout\Topbar::class);
