@@ -68,7 +68,7 @@ class TaskScheduler extends Component
 					'command'     => $command,
 					'output'      => 'Fehler: ' . $e->getMessage(),
 					'started'     => now()->format('d.m.Y H:i:s'),
-					'duration'    => '—',
+					'duration'    => '–',
 					'headerBg'    => 'bg-danger',
 					'headerText'  => 'text-white',
 				]
@@ -104,7 +104,7 @@ class TaskScheduler extends Component
                     'task'        => $command,
                     'description' => $all[$command]->getDescription() ?? '',
                     'interval'    => $this->humanReadableGroupedInterval($times, $group),
-                    'nextRun'     => $nextRun ? Carbon::parse($nextRun)->format('d.m.Y H:i') : '—',
+                    'nextRun'     => $nextRun ? Carbon::parse($nextRun)->format('d.m.Y H:i') : '–',
                     'scheduled'   => true,
                 ];
             });
@@ -117,8 +117,8 @@ class TaskScheduler extends Component
 						'key'         => $command,
 						'task'        => $command,
 						'description' => $all[$command]->getDescription() ?? '',
-						'interval'    => '—',
-						'nextRun'     => '—',
+						'interval'    => '–',
+						'nextRun'     => '–',
 						'scheduled'   => false,
 					];
 				});
@@ -161,7 +161,7 @@ class TaskScheduler extends Component
             if (preg_match('/^\*\/(\d+) \* \* \* \*$/', $expr, $m)) return "Alle {$m[1]} Minuten";
         }
 
-        return '—';
+        return '–';
     }
 
     public function render()

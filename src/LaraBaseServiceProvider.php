@@ -94,6 +94,10 @@ class LaraBaseServiceProvider extends ServiceProvider
 			__DIR__ . '/../resources/views/vendor/livewire' => resource_path('views/vendor/livewire'),
 		], 'lara-base-pagination');
 
+		$this->publishes([
+			__DIR__ . '/../resources/help' => resource_path('help'),
+		], 'lara-base-help');
+
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
         $loader->alias('LaraLog', \Sitakgmbh\LaraBase\Facades\LaraLog::class);
 		$loader->alias('LaraSettings', \Sitakgmbh\LaraBase\Facades\LaraSettings::class);

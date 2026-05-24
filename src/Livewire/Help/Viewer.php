@@ -7,14 +7,14 @@ use Livewire\Component;
 
 class Viewer extends Component
 {
-    public string $key     = '';
-    public array  $toc     = [];
+    public string $key      = '';
+    public array  $toc      = [];
     public array  $pageRoles = [];
     public array  $pageMeta  = [];
-    public string $html    = '';
+    public string $html     = '';
     public bool   $notFound = false;
-    public string $query   = '';
-    public array  $results = [];
+    public string $query    = '';
+    public array  $results  = [];
 
     public function mount(string $key): void
     {
@@ -26,14 +26,17 @@ class Viewer extends Component
 
     protected function loadToc(): void
     {
-        $path = resource_path('help/toc.json');
+		$projectPath = resource_path('help/toc.json');
+		$packagePath = __DIR__ . '/../../../resources/help/toc.json';
 
-        if (!file_exists($path)) {
-            $this->toc = [];
-            return;
-        }
+		$path = file_exists($projectPath) ? $projectPath : $packagePath;
 
-        $raw = json_decode(file_get_contents($path), true) ?? [];
+		if (!file_exists($path)) {
+			$this->toc = [];
+			return;
+		}
+
+		$raw = json_decode(file_get_contents($path), true) ?? [];
         $toc = [];
         $this->pageRoles = [];
 
@@ -99,9 +102,11 @@ class Viewer extends Component
             return;
         }
 
-        $file = resource_path("help/{$key}.html");
+        $projectFile = resource_path("help/{$key}.html");
+        $packageFile = __DIR__ . '/../../../resources/help/' . $key . '.html';
+        $file        = file_exists($projectFile) ? $projectFile : (file_exists($packageFile) ? $packageFile : null);
 
-        if (!file_exists($file)) {
+        if (!$file) {
             $this->notFound = true;
             $this->html     = '<p class="text-muted">Für diese Seite ist keine Hilfe verfügbar.</p>';
             return;
@@ -165,9 +170,31 @@ class Viewer extends Component
 
         if (strlen($term) < 2) return false;
 
-        $files = collect(File::files(resource_path('help')))
-            ->filter(fn($f) => $f->getExtension() === 'html')
-            ->filter(fn($f) => array_key_exists($f->getFilenameWithoutExtension(), $this->pageRoles));
+        $projectHelpPath = resource_path('help');
+        $packageHelpPath = __DIR__ . '/../../../resources/help';
+
+        $files = collect();
+
+        // Package Help-Dateien laden
+        if (is_dir($packageHelpPath)) {
+            $files = $files->merge(
+                collect(File::files($packageHelpPath))
+                    ->filter(fn($f) => $f->getExtension() === 'html')
+            );
+        }
+
+        // Projekt Help-Dateien laden – überschreiben Package bei gleichem Namen
+        if (is_dir($projectHelpPath)) {
+            $projectFiles = collect(File::files($projectHelpPath))
+                ->filter(fn($f) => $f->getExtension() === 'html');
+
+            $projectNames = $projectFiles->map(fn($f) => $f->getFilename())->toArray();
+            $files = $files->filter(fn($f) => !in_array($f->getFilename(), $projectNames));
+            $files = $files->merge($projectFiles);
+        }
+
+        // Nur Dateien die in toc.json erfasst sind
+        $files = $files->filter(fn($f) => array_key_exists($f->getFilenameWithoutExtension(), $this->pageRoles));
 
         $user    = auth()->user();
         $isAdmin = $user && (
@@ -198,7 +225,9 @@ class Viewer extends Component
             $excerpt = preg_replace('/' . preg_quote($term, '/') . '/i', '<mark>$0</mark>', $excerpt);
 
             $meta  = $this->pageMeta[$name] ?? null;
-            $label = $meta ? ($meta['group'] ? $meta['group'] . ' → ' . $meta['title'] : $meta['title']) : $name;
+            $label = $meta
+                ? ($meta['group'] ? $meta['group'] . ' → ' . $meta['title'] : $meta['title'])
+                : $name;
 
             $this->results[] = [
                 'key'     => $name,
