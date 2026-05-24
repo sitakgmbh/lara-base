@@ -134,38 +134,38 @@ class CheckUpdate extends Command
         $skipped = [];
 
         for ($i = 0; $i < $zip->numFiles; $i++) {
-            $name     = $zip->getNameIndex($i);
-            $destPath = str_replace('/', DIRECTORY_SEPARATOR, $this->target . '/' . $name);
+			$name     = $zip->getNameIndex($i);
+			$destPath = str_replace('/', DIRECTORY_SEPARATOR, $this->target . '/' . $name);
 
-            if (str_ends_with($name, '/')) {
-                if (!is_dir($destPath)) {
-                    mkdir($destPath, 0755, true);
-                    $this->line('   [DIR] Erstellt: ' . $name);
-                }
-                continue;
-            }
+			// Verzeichnis-Einträge überspringen
+			if (str_ends_with($name, '/') || is_dir($destPath)) {
+				if (!is_dir($destPath)) {
+					mkdir($destPath, 0755, true);
+					$this->line('   [DIR] Erstellt: ' . $name);
+				}
+				continue;
+			}
 
-            $newContent = $zip->getFromIndex($i);
-            if ($newContent === false) {
-                $this->warn('   [SKIP] Konnte nicht lesen: ' . $name);
-                continue;
-            }
+			$newContent = $zip->getFromIndex($i);
+			if ($newContent === false) {
+				$this->warn('   [SKIP] Konnte nicht lesen: ' . $name);
+				continue;
+			}
 
-            if (is_dir($destPath)) continue;
+			// Sicherstellen dass Zielverzeichnis existiert
+			$dir = dirname($destPath);
+			if (!is_dir($dir)) {
+				mkdir($dir, 0755, true);
+			}
 
-            $dir = dirname($destPath);
-            if (!is_dir($dir)) {
-                mkdir($dir, 0755, true);
-            }
+			if (file_exists($destPath) && file_get_contents($destPath) === $newContent) {
+				$skipped[] = $name;
+				continue;
+			}
 
-            if (file_exists($destPath) && file_get_contents($destPath) === $newContent) {
-                $skipped[] = $name;
-                continue;
-            }
-
-            file_put_contents($destPath, $newContent);
-            $updated[] = $name;
-            $this->line('   [UPD] ' . $name);
+			file_put_contents($destPath, $newContent);
+			$updated[] = $name;
+			$this->line('   [UPD] ' . $name);
         }
 
         $zip->close();
