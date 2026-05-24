@@ -3,9 +3,9 @@
 namespace Sitakgmbh\LaraBase\Console\Server;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
 use Sitakgmbh\LaraBase\Logging\Logger;
 use Sitakgmbh\LaraBase\Models\Setting;
+use Illuminate\Support\Facades\Http;
 use ZipArchive;
 
 class CheckUpdate extends Command
@@ -13,32 +13,45 @@ class CheckUpdate extends Command
     protected $signature   = 'server:check-update {--update : Automatisch aktualisieren wenn Update verfügbar}';
     protected $description = 'Prüft ob eine neue Version verfügbar ist und aktualisiert optional.';
 
-    private string $zipPath = 'C:/xampp/web_latest_download.zip';
-    private string $target  = 'C:/xampp/htdocs';
+    private string $zipPath;
+    private string $target = 'C:/xampp/htdocs';
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->zipPath = storage_path('app/updates/web_latest_download.zip');
+    }
 
     public function handle(): int
     {
-        $this->info('=== Update-Check ===');
+        $this->info('=== WinStage Update-Check ===');
 
         try {
             $baseUrl        = rtrim(Setting::getValue('app_update_url'), '/');
             $currentVersion = Setting::getValue('app_version', '0.0.0');
 
-            // Version abrufen
-            $this->info('► Prüfe Version...');
-            $response = Http::timeout(10)->get($baseUrl . '/version.txt');
+            // Version abrufen via cURL
+			$this->info('► Prüfe Version...');
+			$response = Http::timeout(120)->get($baseUrl . '/version.php');
 
-            if (!$response->successful()) {
-                throw new \Exception('Version konnte nicht abgerufen werden: HTTP ' . $response->status());
+			if (!$response->successful()) {
+				throw new \Exception('Version konnte nicht abgerufen werden: HTTP ' . $response->status());
+			}
+
+			$data          = $response->json();
+			$latestVersion = $data['version'] ?? null;
+			$latestDate    = $data['date']    ?? null;
+
+            if (!$latestVersion) {
+                throw new \Exception('Ungültige Versionsantwort vom Server.');
             }
 
-            $latestVersion = trim($response->body());
-
-            Setting::setValue('app_version_latest',     $latestVersion);
-            Setting::setValue('app_version_checked_at', now()->toDateTimeString());
+            Setting::setValue('app_version_latest',      $latestVersion);
+            Setting::setValue('app_version_latest_date', $latestDate);
+            Setting::setValue('app_version_checked_at',  now()->toDateTimeString());
 
             $this->line('   Installiert: ' . $currentVersion);
-            $this->line('   Verfügbar:   ' . $latestVersion);
+            $this->line('   Verfügbar:   ' . $latestVersion . ($latestDate ? ' (' . $latestDate . ')' : ''));
             $this->newLine();
 
             if (!version_compare($latestVersion, $currentVersion, '>')) {
@@ -62,20 +75,20 @@ class CheckUpdate extends Command
             $this->info('► Starte Update...');
             $this->runUpdate($baseUrl);
 
-            // Version aktualisieren
             Setting::setValue('app_version', $latestVersion);
             $this->newLine();
-            $this->info('Version aktualisiert: ' . $latestVersion);
+            $this->info('Version aktualisiert auf: ' . $latestVersion);
 
             Logger::db('system', 'info', 'Update erfolgreich', [
                 'version' => $latestVersion,
+                'datum'   => $latestDate,
             ]);
 
             return self::SUCCESS;
 
         } catch (\Exception $e) {
             $this->error('Fehler: ' . $e->getMessage());
-            Logger::db('system', 'error', 'Update fehlgeschlagen', [
+            Logger::db('system', 'error', 'Update-Check fehlgeschlagen', [
                 'fehler' => $e->getMessage(),
             ]);
             return self::FAILURE;
@@ -86,19 +99,24 @@ class CheckUpdate extends Command
     {
         $zipUrl = $baseUrl . '/web_latest.zip';
 
-        // Download
-        $this->info('► Lade ZIP herunter...');
-        $response = Http::timeout(120)->get($zipUrl);
+        // Download via cURL
+		$this->info('► Lade ZIP herunter...');
+		$response = Http::timeout(120)->get($zipUrl);
 
-        if (!$response->successful()) {
-            throw new \Exception('Download fehlgeschlagen: HTTP ' . $response->status());
-        }
+		if (!$response->successful()) {
+			throw new \Exception('Download fehlgeschlagen: HTTP ' . $response->status());
+		}
 
-        $this->line('   Grösse: ' . round(strlen($response->body()) / 1024, 1) . ' KB');
+		$body = $response->body();
+		$this->line('   Grösse: ' . round(strlen($body) / 1024, 1) . ' KB');
 
         // Speichern
         $this->info('► Speichere ZIP...');
-        file_put_contents($this->zipPath, $response->body());
+        $dir = dirname($this->zipPath);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+        file_put_contents($this->zipPath, $body);
         $this->line('   Gespeichert: ' . $this->zipPath);
 
         // Öffnen
@@ -151,9 +169,16 @@ class CheckUpdate extends Command
         }
 
         $zip->close();
+        unset($zip);
+        gc_collect_cycles();
+        sleep(1);
 
-        if (file_exists($this->zipPath)) {
-            unlink($this->zipPath);
+        try {
+            if (file_exists($this->zipPath)) {
+                unlink($this->zipPath);
+            }
+        } catch (\Exception $e) {
+            $this->warn('ZIP konnte nicht gelöscht werden: ' . $e->getMessage());
         }
 
         $this->newLine();

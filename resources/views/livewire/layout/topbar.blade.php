@@ -38,6 +38,18 @@
                 </li>
             @endif
 
+			{{-- Update verfügbar Badge --}}
+			@php
+				$currentVersion = \Sitakgmbh\LaraBase\Models\Setting::getValue('app_version', '0.0.0');
+				$latestVersion  = \Sitakgmbh\LaraBase\Models\Setting::getValue('app_version_latest');
+				$updateAvailable = $latestVersion && version_compare($latestVersion, $currentVersion, '>');
+			@endphp
+			@if($updateAvailable)
+				<li class="d-inline-block">
+					<a href="{{ route('admin.tools.task-scheduler') }}" class="badge bg-info text-decoration-none">Update verfügbar</a>
+				</li>
+			@endif
+
             {{-- Incidents Notification (nur Admin) --}}
             @role('admin')
             <li class="dropdown notification-list">

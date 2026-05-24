@@ -15,7 +15,7 @@ class SettingsSeeder extends Seeder
 				'name'        => 'Update URL',
 				'group'       => 'Update',
 				'description' => 'URL zum WinStage Update-Verzeichnis.',
-				'value'       => 'https://myserver.local/update,
+				'value'       => 'https://myserver.local/update',
 				'type'        => 'string',
 			],
             [
