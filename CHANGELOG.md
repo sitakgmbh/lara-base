@@ -4,7 +4,7 @@ Alle Änderungen an diesem Projekt werden in diesem Dokument festgehalten.
 
 ---
 
-## [1.0.0] – 01.02.2026
+## [1.0.1] – 01.02.2026
 
 #### Neuigkeiten
 

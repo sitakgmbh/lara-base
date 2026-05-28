@@ -27,10 +27,10 @@ cd mein-projekt
 "prefer-stable": true
 ```
 
-> Für GitHub:
-> ```json
-> { "type": "vcs", "url": "git@github.com:sitakgmbh/lara-base.git" }
-> ```
+Für GitHub:
+```json
+{ "type": "vcs", "url": "git@github.com:sitakgmbh/lara-base.git" }
+```
 
 ### 3. Package installieren
 
