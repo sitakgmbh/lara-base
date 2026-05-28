@@ -22,33 +22,33 @@
 	</div>
 
     @if(in_array($status, ['current', 'available', 'done']))
-        <div class="table-responsive mb-4">
-            <table class="table table-sm mb-0">
-                <tbody>
-                    <tr>
-                        <td class="text-muted text-nowrap" style="width: 180px;">Installierte Version</td>
-                        <td class="text-nowrap"><span class="badge bg-secondary">{{ $currentVersion }}</span></td>
-                    </tr>
-                    <tr>
-                        <td class="text-muted text-nowrap">Verfügbare Version</td>
-                        <td class="text-nowrap">
-                            <span class="badge {{ $status === 'available' ? 'bg-warning text-dark' : 'bg-success' }}">
-                                {{ $latestVersion }}
-                            </span>
-                            @if($latestDate)
-                                <span class="text-muted ms-2 small">{{ $latestDate }}</span>
-                            @endif
-                        </td>
-                    </tr>
-                    @if($checkedAt)
-                        <tr>
-                            <td class="text-muted text-nowrap">Zuletzt geprüft</td>
-                            <td class="text-muted text-nowrap small">{{ $checkedAt }}</td>
-                        </tr>
-                    @endif
-                </tbody>
-            </table>
-        </div>
+		<div class="table-responsive mb-4">
+			<table class="table table-sm mb-0 align-middle">
+				<tbody>
+					<tr>
+						<td class="text-muted text-nowrap" style="width: 180px;">Installierte Version</td>
+						<td class="text-nowrap"><span class="badge bg-secondary">{{ $currentVersion }}</span></td>
+					</tr>
+					<tr>
+						<td class="text-muted text-nowrap">Verfügbare Version</td>
+						<td class="text-nowrap">
+							<span class="badge {{ $status === 'available' ? 'bg-info' : 'bg-success' }}">
+								{{ $latestVersion }}
+							</span>
+							@if($latestDate)
+								<span class="text-muted ms-2 small">{{ $latestDate }}</span>
+							@endif
+						</td>
+					</tr>
+					@if($checkedAt)
+						<tr>
+							<td class="text-muted text-nowrap">Zuletzt geprüft</td>
+							<td class="text-muted text-nowrap small">{{ $checkedAt }}</td>
+						</tr>
+					@endif
+				</tbody>
+			</table>
+		</div>
     @endif
 
     @if($status === 'error' && $errorMessage)
@@ -57,37 +57,25 @@
         </div>
     @endif
 
-    @if($status === 'done' && $updatedCount > 0)
-        <div class="table-responsive mb-4">
-            <table class="table table-sm mb-0">
-                <thead>
-                    <tr>
-                        <th colspan="2" class="text-muted fw-normal small">
-                            {{ $updatedCount }} {{ $updatedCount === 1 ? 'Datei' : 'Dateien' }} aktualisiert
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($updatedFiles as $file)
-                        <tr>
-                            <td class="text-nowrap text-success small font-monospace" style="width: 60px;">[UPD]</td>
-                            <td class="text-nowrap small font-monospace">{{ $file }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    @endif
+	@if($status === 'done')
+		@if($updatedCount > 0)
+			<div class="alert alert-secondary small">
+				{{ $updatedCount }} {{ $updatedCount === 1 ? 'Datei' : 'Dateien' }} aktualisiert.
+			</div>
+		@else
+			<div class="alert alert-secondary small">Keine Dateien geändert.</div>
+		@endif
+	@endif
 
     @if($status === 'done' && $updatedCount === 0)
-        <div class="alert alert-secondary small">Keine Dateien wurden geändert.</div>
+        <div class="alert alert-secondary small">Keine Dateien geändert.</div>
     @endif
 
     <div class="d-flex gap-2">
         @if($status === 'available')
-            <button wire:click="installUpdate" wire:loading.attr="disabled" class="btn btn-warning">
+            <button wire:click="installUpdate" wire:loading.attr="disabled" class="btn btn-primary">
                 <span wire:loading.remove wire:target="installUpdate">
-                    <i class="mdi mdi-update me-1"></i> Update installieren
+                    Update installieren
                 </span>
                 <span wire:loading wire:target="installUpdate">
                     <span class="spinner-border spinner-border-sm me-1"></span> Installiere...
