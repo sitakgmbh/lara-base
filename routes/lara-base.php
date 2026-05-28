@@ -36,6 +36,7 @@ Route::middleware(['web', 'auth', 'role:admin'])->group(function ()
 
 	Route::get('/admin/tools/task-scheduler', \Sitakgmbh\LaraBase\Livewire\Pages\Admin\Tools\TaskScheduler::class)->name('admin.tools.task-scheduler');
 	Route::get('/admin/tools/model-query', \Sitakgmbh\LaraBase\Livewire\Pages\Admin\Tools\ModelQuery::class)->name('admin.tools.model-query');
+	Route::get('/admin/update', \Sitakgmbh\LaraBase\Livewire\Pages\Admin\Update::class)->name('admin.update');
 
 	Route::get('/admin/logfiles', \Sitakgmbh\LaraBase\Livewire\Pages\Admin\Logs\Logfiles::class)->name('admin.logfiles.index');
 

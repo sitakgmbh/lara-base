@@ -74,6 +74,15 @@ return [
 			'is_external' => false,
 		],
 		[
+			'group'       => 'Allgemein',
+			'title'       => 'Updates',
+			'description' => 'Aktualisierungen suchen und installieren',
+			'icon'        => 'mdi mdi-update',
+			'color'       => 'dark',
+			'route'       => 'admin.update',
+			'is_external' => false,
+		],
+		[
 			'group'       => 'Werkzeuge',
 			'title'       => 'Aufgabenplaner',
 			'description' => 'Tasks einsehen und ausführen',

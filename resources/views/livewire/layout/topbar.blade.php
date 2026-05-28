@@ -46,7 +46,7 @@
 			@endphp
 			@if($updateAvailable)
 				<li class="d-inline-block">
-					<a href="{{ route('admin.tools.task-scheduler') }}" class="badge bg-info text-decoration-none">Update verfügbar</a>
+					<a href="{{ route('admin.update') }}" class="badge bg-info text-decoration-none">Update verfügbar</a>
 				</li>
 			@endif
 

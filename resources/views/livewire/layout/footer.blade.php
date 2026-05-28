@@ -2,9 +2,9 @@
     <footer class="footer">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-6">
-                    <script>document.write(new Date().getFullYear())</script> © {{ config('app.name') }}
-                </div>
+				<div class="col-md-6">
+					WinStage Web {{ \Sitakgmbh\LaraBase\Models\Setting::getValue('app_version', '0.0.0') }}
+				</div>
                 <div class="col-md-6">
                     <div class="text-md-end footer-links">
                         @php

@@ -95,11 +95,11 @@ class CheckUpdate extends Command
         }
     }
 
-    private function runUpdate(string $baseUrl): void
-    {
-        $zipUrl = $baseUrl . '/web_latest.zip';
+	private function runUpdate(string $baseUrl): void
+	{
+		$zipUrl = $baseUrl . '/web_latest.zip';
 
-        // Download via cURL
+		// Download via Guzzle
 		$this->info('► Lade ZIP herunter...');
 		$response = Http::timeout(120)->get($zipUrl);
 
@@ -110,35 +110,36 @@ class CheckUpdate extends Command
 		$body = $response->body();
 		$this->line('   Grösse: ' . round(strlen($body) / 1024, 1) . ' KB');
 
-        // Speichern
-        $this->info('► Speichere ZIP...');
-        $dir = dirname($this->zipPath);
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
-        file_put_contents($this->zipPath, $body);
-        $this->line('   Gespeichert: ' . $this->zipPath);
+		// Speichern
+		$this->info('► Speichere ZIP...');
+		$dir = dirname($this->zipPath);
+		if (!is_dir($dir)) {
+			mkdir($dir, 0755, true);
+		}
+		file_put_contents($this->zipPath, $body);
+		$this->line('   Gespeichert: ' . $this->zipPath);
 
-        // Öffnen
-        $this->info('► Öffne ZIP...');
-        $zip = new ZipArchive();
-        if ($zip->open($this->zipPath) !== true) {
-            throw new \Exception('ZIP konnte nicht geöffnet werden.');
-        }
-        $this->line('   Dateien im ZIP: ' . $zip->numFiles);
-        $this->newLine();
+		// Öffnen
+		$this->info('► Öffne ZIP...');
+		$zip = new ZipArchive();
+		if ($zip->open($this->zipPath) !== true) {
+			throw new \Exception('ZIP konnte nicht geöffnet werden.');
+		}
+		$this->line('   Dateien im ZIP: ' . $zip->numFiles);
+		$this->newLine();
 
-        // Entpacken
-        $this->info('► Verarbeite Dateien...');
-        $updated = [];
-        $skipped = [];
+		// Entpacken
+		$this->info('► Verarbeite Dateien...');
+		$updated = [];
+		$skipped = [];
 
-        for ($i = 0; $i < $zip->numFiles; $i++) {
-			$name     = $zip->getNameIndex($i);
+		for ($i = 0; $i < $zip->numFiles; $i++) {
+			$stat     = $zip->statIndex($i);
+			$name     = $stat['name'];
 			$destPath = str_replace('/', DIRECTORY_SEPARATOR, $this->target . '/' . $name);
 
-			// Verzeichnis-Einträge überspringen
-			if (str_ends_with($name, '/') || is_dir($destPath)) {
+			// Verzeichniseinträge
+			if (str_ends_with($name, '/') || str_ends_with($destPath, DIRECTORY_SEPARATOR)) {
 				if (!is_dir($destPath)) {
 					mkdir($destPath, 0755, true);
 					$this->line('   [DIR] Erstellt: ' . $name);
@@ -152,12 +153,13 @@ class CheckUpdate extends Command
 				continue;
 			}
 
-			// Sicherstellen dass Zielverzeichnis existiert
-			$dir = dirname($destPath);
-			if (!is_dir($dir)) {
-				mkdir($dir, 0755, true);
+			// Zielverzeichnis erstellen
+			$destDir = dirname($destPath);
+			if (!is_dir($destDir)) {
+				mkdir($destDir, 0755, true);
 			}
 
+			// Unveränderte Dateien überspringen
 			if (file_exists($destPath) && file_get_contents($destPath) === $newContent) {
 				$skipped[] = $name;
 				continue;
@@ -166,24 +168,24 @@ class CheckUpdate extends Command
 			file_put_contents($destPath, $newContent);
 			$updated[] = $name;
 			$this->line('   [UPD] ' . $name);
-        }
+		}
 
-        $zip->close();
-        unset($zip);
-        gc_collect_cycles();
-        sleep(1);
+		$zip->close();
+		unset($zip);
+		gc_collect_cycles();
+		sleep(1);
 
-        try {
-            if (file_exists($this->zipPath)) {
-                unlink($this->zipPath);
-            }
-        } catch (\Exception $e) {
-            $this->warn('ZIP konnte nicht gelöscht werden: ' . $e->getMessage());
-        }
+		try {
+			if (file_exists($this->zipPath)) {
+				unlink($this->zipPath);
+			}
+		} catch (\Exception $e) {
+			$this->warn('ZIP konnte nicht gelöscht werden: ' . $e->getMessage());
+		}
 
-        $this->newLine();
-        $this->info('=== Zusammenfassung ===');
-        $this->line('   Aktualisiert: ' . count($updated));
-        $this->line('   Unverändert:  ' . count($skipped));
-    }
+		$this->newLine();
+		$this->info('=== Zusammenfassung ===');
+		$this->line('   Aktualisiert: ' . count($updated));
+		$this->line('   Unverändert:  ' . count($skipped));
+	}
 }
