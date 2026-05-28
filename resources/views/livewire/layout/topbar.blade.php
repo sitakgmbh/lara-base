@@ -31,7 +31,7 @@
 
         <ul class="topbar-menu d-flex align-items-center gap-3">
 
-            {{-- Test-Modus Badge --}}
+            {{-- Test Modus Badge --}}
             @if(config('lara-base.test_mode', false))
                 <li class="d-inline-block">
                     <div class="badge bg-warning text-dark">Test-Modus aktiv</div>
