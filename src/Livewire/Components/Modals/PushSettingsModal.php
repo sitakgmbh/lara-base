@@ -20,7 +20,7 @@ class PushSettingsModal extends BaseModal
 
         $this->title      = 'Push-Benachrichtigungen';
         $this->size       = 'md';
-        $this->backdrop   = false;
+        $this->backdrop   = true;
         $this->position   = 'centered';
         $this->scrollable = false;
         $this->headerBg   = 'bg-primary';

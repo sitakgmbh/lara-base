@@ -58,6 +58,10 @@ class PwaServiceProvider extends ServiceProvider
             ->name('pwa.subscribe')
             ->middleware($middleware);
 
+		$this->app['router']->patch('/pwa/device', [PushSubscriptionController::class, 'update'])
+			->name('pwa.device.update')
+			->middleware($middleware);
+
         // Kategorie abbestellen
         $this->app['router']->delete('/pwa/subscribe', [PushSubscriptionController::class, 'destroy'])
             ->name('pwa.unsubscribe')

@@ -110,6 +110,22 @@ class PushSubscriptionController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
+	public function update(Request $request): JsonResponse
+	{
+		$request->validate([
+			'endpoint'    => ['required', 'string'],
+			'device_name' => ['required', 'string', 'max:100'],
+		]);
+
+		\DB::table('push_subscriptions')
+			->where('subscribable_id', auth()->id())
+			->where('subscribable_type', get_class(auth()->user()))
+			->where('endpoint', $request->input('endpoint'))
+			->update(['device_name' => $request->input('device_name')]);
+
+		return response()->json(['status' => 'ok']);
+	}
+
     /**
      * Subscription für eine Kategorie entfernen.
      * DELETE /pwa/subscribe
