@@ -156,6 +156,17 @@
 						</a>
 					@endif
 
+					@if(config('lara-base.pwa.enabled') && config('lara-base.pwa.push.enabled'))
+						@php $pushCategories = \LaraNotify::categoriesForUser(auth()->user()); @endphp
+						@if(count($pushCategories) > 0)
+							<a href="#" class="dropdown-item"
+							   onclick="Livewire.dispatch('open-modal', { modal: 'components.modals.push-settings' })">
+								<i class="mdi mdi-bell-outline me-1"></i>
+								<span>Benachrichtigungen</span>
+							</a>
+						@endif
+					@endif 
+
 					@if(config('lara-base.auth.mode') === 'local')
 						<a href="#" class="dropdown-item" wire:click.prevent="logout">
 							<i class="mdi mdi-logout me-1"></i>
@@ -167,6 +178,5 @@
         </ul>
     </div>
 	
-	@include('lara-base::livewire.layout.partials.contact-offcanvas')
-	
+	@include('lara-base::livewire.layout.partials.contact-offcanvas')	
 </div>

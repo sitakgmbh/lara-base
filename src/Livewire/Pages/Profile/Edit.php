@@ -29,7 +29,7 @@ class Edit extends Component
             'password'  => $this->form->password ? bcrypt($this->form->password) : $user->password,
         ]);
 
-		\Sitakgmbh\LaraBase\Support\LaraToast::success('Profil aktualisiert', '', $this);
+        \Sitakgmbh\LaraBase\Support\LaraToast::success('Profil aktualisiert', '', $this);
     }
 
     public function render()

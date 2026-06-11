@@ -55,3 +55,4 @@ Route::middleware(['web', 'auth', 'role:admin'])->group(function ()
     });
 
 });
+

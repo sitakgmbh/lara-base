@@ -47,7 +47,7 @@ class SettingsSeeder extends Seeder
                 'name'        => 'Debug-Modus',
 				'group'       => 'System',
                 'description' => 'Aktiviert erweiterte Debug-Ausgaben',
-                'value'       => '0',
+                'value'       => '1',
                 'type'        => 'bool',
             ],
 			[
@@ -55,7 +55,7 @@ class SettingsSeeder extends Seeder
 				'name'        => 'Hilfe anzeigen',
 				'group'       => 'System',
 				'description' => 'Zeigt Hilfe-Links im Footer an',
-				'value'       => 'off',
+				'value'       => 'all',
 				'type'        => 'enum',
 			],
 			[

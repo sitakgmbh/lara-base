@@ -164,4 +164,85 @@ return [
 		],
 	],
 
+	'pwa' => [
+
+		'enabled' => env('PWA_ENABLED', false),
+
+		'manifest' => [
+			'name'             => env('PWA_NAME', env('APP_NAME', 'App')),
+			'short_name'       => env('PWA_SHORT_NAME', env('APP_NAME', 'App')),
+			'description'      => env('PWA_DESCRIPTION', ''),
+			'start_url'        => env('PWA_START_URL', '/'),
+			'display'          => env('PWA_DISPLAY', 'standalone'), // standalone | minimal-ui | fullscreen | browser
+			'background_color' => env('PWA_BACKGROUND_COLOR', '#ffffff'),
+			'theme_color'      => env('PWA_THEME_COLOR', '#000000'),
+			'orientation'      => env('PWA_ORIENTATION', 'any'),
+			'icons' => [
+				['src' => '/icons-pwa/icon-192x192.png', 'sizes' => '192x192', 'type' => 'image/png', 'purpose' => 'any'],
+				['src' => '/icons-pwa/icon-192x192.png', 'sizes' => '192x192', 'type' => 'image/png', 'purpose' => 'maskable'],
+				['src' => '/icons-pwa/icon-512x512.png',  'sizes' => '512x512',  'type' => 'image/png', 'purpose' => 'any'],
+				['src' => '/icons-pwa/icon-512x512.png',  'sizes' => '512x512',  'type' => 'image/png', 'purpose' => 'maskable'],
+			],
+			'screenshots' => [
+				[
+					'src'          => '/icons-pwa/screenshot-desktop.png',
+					'sizes'        => '1280x720',
+					'type'         => 'image/png',
+					'form_factor'  => 'wide',
+					'label'        => config('app.name'),
+				],
+				[
+					'src'          => '/icons-pwa/screenshot-mobile.png',
+					'sizes'        => '390x844',
+					'type'         => 'image/png',
+					'form_factor'  => 'narrow',
+					'label'        => config('app.name'),
+				],
+			],
+		],
+
+		'service_worker' => [
+			// Cache-Strategie für Navigation/HTML-Requests
+			'strategy'      => env('PWA_SW_STRATEGY', 'network-first'), // network-first | cache-first | stale-while-revalidate
+			'cache_name'    => env('PWA_CACHE_NAME', env('APP_NAME', 'app') . '-v1'),
+			// URLs die beim SW-Install sofort gecacht werden
+			'precache_urls' => [
+				'/',
+				'/offline',
+			],
+		],
+
+		// Offline-Fallback Route (null = deaktiviert)
+		'offline_url' => '/offline',
+
+		'push' => [
+
+			'enabled' => env('PWA_PUSH_ENABLED', false),
+
+			'vapid' => [
+				'subject'     => env('VAPID_SUBJECT', 'mailto:' . env('COMPANY_EMAIL', 'admin@example.com')),
+				'public_key'  => env('VAPID_PUBLIC_KEY', ''),
+				'private_key' => env('VAPID_PRIVATE_KEY', ''),
+			],
+
+			// Kategorien — pro Projekt anpassbar
+			// 'roles' => []  = alle authentifizierten User
+			// 'roles' => ['admin'] = nur Admins sehen diese Kategorie im Profil
+			'categories' => [
+				[
+					'key'   => 'system',
+					'label' => 'System-Meldungen',
+					'roles' => ['admin'],
+				],
+				[
+					'key'   => 'incidents',
+					'label' => 'Incidents',
+					'roles' => ['admin'],
+				],
+			],
+
+		],
+
+	],
+
 ];

@@ -5,10 +5,11 @@ namespace Sitakgmbh\LaraBase\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use NotificationChannels\WebPush\HasPushSubscriptions;
 
 class BaseUser extends Authenticatable
 {
-	use Notifiable, HasRoles;
+	use Notifiable, HasRoles, HasPushSubscriptions;
 
     protected $fillable = [
         'username',

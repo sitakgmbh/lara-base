@@ -19,6 +19,7 @@
 	<link href="{{ asset('assets/vendor/jquery-toast-plugin/jquery.toast.min.css') }}" rel="stylesheet" />
 	<link href="{{ asset('assets/css/toast.css') }}" rel="stylesheet" />
 
+	@pwaHead
     @stack('head')
     @livewireStyles
 </head>
@@ -143,6 +144,7 @@
 	<!-- Modal-Manager und Basic Modals -->
 	<livewire:components.modals.modal-manager />
 	<livewire:components.modals.alert-modal />
+	<livewire:components.modals.push-settings />
 	
 	{{-- Platzhalter Modals --}}
 	@hasSection('modals')

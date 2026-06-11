@@ -67,10 +67,6 @@
 		@endif
 	@endif
 
-    @if($status === 'done' && $updatedCount === 0)
-        <div class="alert alert-secondary small">Keine Dateien geändert.</div>
-    @endif
-
     <div class="d-flex gap-2 mb-3">
         @if($status === 'available')
             <button wire:click="installUpdate" wire:loading.attr="disabled" class="btn btn-primary">
