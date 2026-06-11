@@ -14,18 +14,18 @@ class PushManager
      *
      * LaraNotify::send('incidents', 'Titel', 'Text', '/url');
      */
-    public function send(string $category, string $title, string $body, string $url = '/'): void
-    {
-        $userModel = config('auth.providers.users.model', \App\Models\User::class);
+	public function send(string $category, string $title, string $body, string $url = '/'): void
+	{
+		$userModel = config('auth.providers.users.model', \App\Models\User::class);
 
-        $users = $userModel::whereHas('pushSubscriptions', function ($q) use ($category) {
-            $q->where('category', $category);
-        })->get();
+		$users = $userModel::whereHas('pushSubscriptions', function ($q) use ($category) {
+			$q->where('category', $category);
+		})->get();
 
-        foreach ($users as $user) {
-            SendPushNotificationJob::dispatch($user, $category, $title, $body, $url);
-        }
-    }
+		foreach ($users as $user) {
+			$this->dispatch($user, $category, $title, $body, $url);
+		}
+	}
 
     /**
      * Notification synchron senden (kein Queue).
@@ -55,13 +55,13 @@ class PushManager
      *
      * LaraNotify::sendTo($user, 'system', 'Titel', 'Text', '/url');
      */
-    public function sendTo(Model $user, string $category, string $title, string $body, string $url = '/'): void
-    {
-        $hasSub = $user->pushSubscriptions()->where('category', $category)->exists();
-        if (! $hasSub) return;
+	public function sendTo(Model $user, string $category, string $title, string $body, string $url = '/'): void
+	{
+		$hasSub = $user->pushSubscriptions()->where('category', $category)->exists();
+		if (! $hasSub) return;
 
-        SendPushNotificationJob::dispatch($user, $category, $title, $body, $url);
-    }
+		$this->dispatch($user, $category, $title, $body, $url);
+	}
 
     /**
      * Gibt die für den aktuellen User sichtbaren Kategorien zurück (nach Rollen gefiltert).
@@ -101,4 +101,18 @@ class PushManager
             ->whereIn('endpoint', $expiredEndpoints)
             ->delete();
     }
+
+	protected function dispatch(Model $user, string $category, string $title, string $body, string $url): void
+	{
+		if (config('lara-base.pwa.push.queue', false)) {
+			SendPushNotificationJob::dispatch($user, $category, $title, $body, $url);
+		} else {
+			$user->notify(new CategoryPushNotification(
+				category: $category,
+				title:    $title,
+				body:     $body,
+				url:      $url,
+			));
+		}
+	}
 }

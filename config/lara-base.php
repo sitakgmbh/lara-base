@@ -218,6 +218,7 @@ return [
 		'push' => [
 
 			'enabled' => env('PWA_PUSH_ENABLED', false),
+			'queue'   => env('PWA_PUSH_QUEUE', false), // false = synchron, true = via Queue
 
 			'vapid' => [
 				'subject'     => env('VAPID_SUBJECT', 'mailto:' . env('COMPANY_EMAIL', 'admin@example.com')),

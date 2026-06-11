@@ -7,7 +7,9 @@ const STRATEGY = '{{ $strategy }}';
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(PRECACHE_URLS);
+            return Promise.allSettled(
+                PRECACHE_URLS.map(url => cache.add(url).catch(() => null))
+            );
         }).then(() => self.skipWaiting())
     );
 });
@@ -26,14 +28,17 @@ self.addEventListener('activate', (event) => {
 
 // ─── Fetch ───────────────────────────────────────────────────────────────────
 self.addEventListener('fetch', (event) => {
-    // Nur GET, keine Browser-Extensions, keine API-Calls
     if (event.request.method !== 'GET') return;
     if (!event.request.url.startsWith(self.location.origin)) return;
-
-    // AJAX / Livewire-Requests nicht cachen
-    const isLivewire = event.request.url.includes('/livewire/');
-    const isJson     = event.request.headers.get('Accept')?.includes('application/json');
     if (isLivewire || isJson) return;
+
+    // Redirects nicht abfangen — Safari verträgt das nicht
+    if (event.request.mode === 'navigate') {
+        event.respondWith(
+            fetch(event.request).catch(() => caches.match(OFFLINE_URL))
+        );
+        return;
+    }
 
     if (STRATEGY === 'cache-first') {
         event.respondWith(cacheFirst(event.request));
@@ -50,7 +55,7 @@ self.addEventListener('fetch', (event) => {
 async function networkFirst(request) {
     try {
         const response = await fetch(request);
-        if (response && response.status === 200) {
+        if (response && response.status === 200 && response.type !== 'opaqueredirect') {
             const cache = await caches.open(CACHE_NAME);
             cache.put(request, response.clone());
         }
