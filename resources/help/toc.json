@@ -1,0 +1,42 @@
+{
+  "_": {
+    "items": [
+      {
+        "routes": ["dashboard"],
+		"page": "dashboard",
+        "title": "Dashboard"
+      }
+    ]
+  },
+  "Systemsteuerung": {
+    "roles": ["admin"],
+    "items": [
+      {
+        "routes": ["admin.settings"],
+        "title": "Einstellungen",
+        "roles": ["admin"]
+      },
+      {
+        "routes": ["admin.tools.task-scheduler"],
+        "title": "Aufgabenplaner",
+        "roles": ["admin"]
+      },
+      {
+        "routes": ["admin.tools.mail-tool"],
+        "title": "Mail-Tool",
+        "roles": ["admin"]
+      },
+      {
+        "routes": ["admin.tools.model-query"],
+        "title": "Model Query",
+        "roles": ["admin"]
+      },
+      {
+        "routes": ["admin.logs.index", "admin.logfiles.index"],
+        "title": "Logs",
+		"page": "admin.logs",
+        "roles": ["admin"]
+      }
+    ]
+  }
+}
