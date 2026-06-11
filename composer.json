@@ -2,6 +2,7 @@
     "name": "sitakgmbh/lara-base",
     "description": "Sitak GmbH – Laravel Base Package",
     "type": "library",
+	"license": "MIT",
 	"require": {
 		"php": "^8.2",
 		"illuminate/support": "^11.0|^12.0|^13.0",
