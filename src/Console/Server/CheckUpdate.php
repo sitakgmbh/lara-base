@@ -27,7 +27,19 @@ class CheckUpdate extends Command
         $this->info('=== WinStage Update-Check ===');
 
         try {
-            $baseUrl        = rtrim(Setting::getValue('app_update_url'), '/');
+
+			$baseUrl = rtrim(Setting::getValue('app_update_url'), '/');
+
+			if (empty($baseUrl)) {
+				$this->error('app_update_url ist nicht konfiguriert.');
+				return self::FAILURE;
+			}
+
+			if (! filter_var($baseUrl, FILTER_VALIDATE_URL)) {
+				$this->error('app_update_url ist keine gültige URL: ' . $baseUrl);
+				return self::FAILURE;
+			}
+
             $currentVersion = Setting::getValue('app_version', '0.0.0');
 
             // Version abrufen via cURL
