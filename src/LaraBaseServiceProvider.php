@@ -99,6 +99,11 @@ class LaraBaseServiceProvider extends ServiceProvider
             __DIR__ . '/../resources/views/vendor/livewire' => resource_path('views/vendor/livewire'),
         ], 'lara-base-pagination');
 
+		$this->publishes([
+			__DIR__ . '/../resources/views/errors'  => resource_path('views/errors'),
+			__DIR__ . '/../resources/views/layouts/error.blade.php' => resource_path('views/layouts/error.blade.php'),
+		], 'lara-base-errors');
+
         $this->publishes([
             __DIR__ . '/../resources/help' => resource_path('help'),
         ], 'lara-base-help');

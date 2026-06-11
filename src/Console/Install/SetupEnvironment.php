@@ -15,12 +15,12 @@ trait SetupEnvironment
 
         $dest = base_path('.env');
 
-        if (!$this->option('force') && file_exists($dest)) {
-            $this->warn('⚠ .env bereits vorhanden – übersprungen');
-        } else {
-            copy($src, $dest);
-            $this->info('✓ .env erstellt');
-        }
+		if (file_exists($dest)) {
+			$this->warn('⚠ .env bereits vorhanden – übersprungen');
+		} else {
+			copy($src, $dest);
+			$this->info('✓ .env erstellt');
+		}
 
         $example = base_path('.env.example');
         if (file_exists($example)) {

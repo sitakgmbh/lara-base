@@ -24,8 +24,6 @@ class CheckUpdate extends Command
 
     public function handle(): int
     {
-        $this->info('=== WinStage Update-Check ===');
-
         try {
 
 			$baseUrl = rtrim(Setting::getValue('app_update_url'), '/');
