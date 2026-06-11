@@ -30,6 +30,9 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
     if (event.request.method !== 'GET') return;
     if (!event.request.url.startsWith(self.location.origin)) return;
+
+    const isLivewire = event.request.url.includes('/livewire/');
+    const isJson     = event.request.headers.get('Accept')?.includes('application/json');
     if (isLivewire || isJson) return;
 
     // Redirects nicht abfangen — Safari verträgt das nicht
@@ -45,7 +48,6 @@ self.addEventListener('fetch', (event) => {
     } else if (STRATEGY === 'stale-while-revalidate') {
         event.respondWith(staleWhileRevalidate(event.request));
     } else {
-        // network-first (default)
         event.respondWith(networkFirst(event.request));
     }
 });
