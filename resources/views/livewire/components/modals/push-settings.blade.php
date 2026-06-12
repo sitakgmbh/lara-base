@@ -377,7 +377,7 @@
         document.getElementById('device-name-edit').classList.add('d-none');
     });
 
-    // Modal beim Öffnen initialisieren (nur einmal)
+    // Modal beim Öffnen initialisieren
     modalEl.addEventListener('shown.bs.modal', () => {
         if (! initialized) {
             initialized = true;
