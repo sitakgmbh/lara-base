@@ -385,6 +385,11 @@
         }
     });
 
+	// Reset beim Schliessen
+	modalEl.addEventListener('hidden.bs.modal', () => {
+		initialized = false;
+	});
+
 })();
 </script>
 @endif
